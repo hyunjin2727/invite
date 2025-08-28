@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>현진이집 초대장</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;500&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Noto Sans KR', sans-serif;
+      background: linear-gradient(180deg, #f7f2fa 0%, #ece0f4 100%);
+      color: #333;
+      text-align: center;
+      overflow-x: hidden;
+      position: relative;
+      min-height: 100vh;
+    }
+
+    /* 반짝이 전체화면 */
+    #stars {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 0;
+    }
+    .star {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: white;
+      border-radius: 50%;
+      animation: twinkle 2s infinite ease-in-out;
+      opacity: 0.8;
+    }
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.2; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.6); }
+    }
+
+    /* 입장 코드 화면 */
+    .lock-screen {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: transparent;
+      position: relative;
+      z-index: 1;
+    }
+    .lock-screen h2 {
+      margin-bottom: 10px;
+      font-weight: 500;
+    }
+    .lock-screen input {
+      padding: 12px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      text-align: center;
+    }
+    .lock-screen button {
+      margin-top: 12px;
+      padding: 10px 20px;
+      font-size: 16px;
+      background: #9b6cc9;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .lock-screen button:hover {
+      background: #814da8;
+    }
+
+    /* 본문 */
+    .content {
+      display: none;
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 40px 20px;
+      position: relative;
+      z-index: 1;
+    }
+    .banner img {
+      width: 100%;
+      max-height: 420px;
+      object-fit: cover;
+      border-radius: 16px;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+      margin-bottom: 30px;
+    }
+    h1 {
+      font-size: 26px;
+      font-weight: 500;
+      margin: 0 0 14px;
+      color: #333;
+    }
+    .countdown {
+      font-size: 15px;
+      color: #9b6cc9;
+      margin-bottom: 22px;
+    }
+    p {
+      margin: 6px 0;
+      font-size: 15px;
+      color: #444;
+    }
+    .footer {
+      margin-top: 50px;
+      font-size: 13px;
+      color: #777;
+    }
+
+    /* 하트 떨어지는 애니메이션 */
+    .heart {
+      position: fixed;
+      top: -20px;
+      font-size: 24px;
+      animation: fall 3s linear forwards;
+      pointer-events: none;
+      z-index: 10;
+    }
+    @keyframes fall {
+      0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+    }
+
+    /* 💜 하트 모양 버튼 */
+    .heart-button {
+      margin-top: 20px;
+      width: 140px;
+      height: 120px;
+      background: #9b6cc9;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 18px;
+      font-weight: bold;
+      position: relative;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      clip-path: path("M70 120 L10 60 A30 30 0 0 1 70 20 A30 30 0 0 1 130 60 Z");
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      transition: transform 0.2s, background 0.3s;
+    }
+    .heart-button:hover {
+      background: #814da8;
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+<body>
+  <!-- 반짝이 -->
+  <div id="stars"></div>
+
+  <!-- 입장 코드 화면 -->
+  <div class="lock-screen" id="lockScreen">
+    <h2>🔑 입장 코드를 입력하세요</h2>
+    <p style="color:#777;">힌트: 우리가 사귄 날 💜</p>
+    <input type="password" id="password" placeholder="입장 코드" />
+    <button onclick="unlock()">입장</button>
+  </div>
+
+  <!-- 본문 -->
+  <div class="content" id="content">
+    <div class="banner">
+      <img src="banner.jpg" alt="대표 커플 사진">
+    </div>
+
+    <h1>현진이집 초대장</h1>
+    <div class="countdown" id="countdown"></div>
+
+    <p>2025년 8월 29일 (금) 오후 9시 이후</p>
+    <p>서울시 강북구 수유동</p>
+    <p style="margin-top:12px;">함께하는 1박 2일 💜</p>
+
+    <!-- 하트 모양 버튼 -->
+    <button class="heart-button" onclick="dropHearts()">눌러봐</button>
+
+    <p class="footer">Made with 💜 by 현진</p>
+  </div>
+
+  <script>
+    function unlock() {
+      const pw = document.getElementById("password").value;
+      if (pw === "0530") {
+        document.getElementById("lockScreen").style.display = "none";
+        document.getElementById("content").style.display = "block";
+        startCountdown();
+      } else {
+        alert("입장 코드가 틀렸습니다!");
+      }
+    }
+
+    /* 카운트다운 (자정 기준 D-1/D-0) */
+    function startCountdown() {
+      const targetDate = new Date("2025-08-29T21:00:00");
+      const countdownEl = document.getElementById("countdown");
+
+      function update() {
+        const now = new Date();
+        const diff = targetDate - now;
+
+        if (diff <= 0) {
+          countdownEl.textContent = "🎉 오늘이야! 우리 1박 2일 💜";
+          return;
+        }
+
+        const todayMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 0);
+        const eventMidnight = new Date(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate(), 0, 0, 0);
+
+        let days = Math.round((eventMidnight - todayMidnight) / (1000*60*60*24)) + 1;
+        if (days < 0) days = 0;
+
+        const hours = Math.floor((diff / (1000*60*60)) % 24);
+        const mins = Math.floor((diff / (1000*60)) % 60);
+        const secs = Math.floor((diff / 1000) % 60);
+
+        countdownEl.textContent = `D-${days} (${hours}시간 ${mins}분 ${secs}초 남음) ✨`;
+      }
+
+      update();
+      setInterval(update, 1000);
+    }
+
+    /* 별 생성 */
+    function createStars() {
+      const starsContainer = document.getElementById("stars");
+      for (let i = 0; i < 50; i++) {
+        const star = document.createElement("div");
+        star.className = "star";
+        star.style.top = Math.random() * 100 + "%";
+        star.style.left = Math.random() * 100 + "%";
+        star.style.animationDuration = (1.5 + Math.random() * 2) + "s";
+        starsContainer.appendChild(star);
+      }
+    }
+    createStars();
+
+    /* 하트 떨어지기 (보라 하트만) */
+    function dropHearts() {
+      for (let i = 0; i < 10; i++) {
+        const heart = document.createElement("div");
+        heart.className = "heart";
+        heart.style.left = Math.random() * 100 + "vw";
+        heart.style.animationDuration = (2 + Math.random() * 2) + "s";
+        heart.textContent = "💜";
+        document.body.appendChild(heart);
+        setTimeout(() => heart.remove(), 4000);
+      }
+    }
+  </script>
+</body>
+</html>
